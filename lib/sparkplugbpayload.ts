@@ -83,7 +83,7 @@ export interface UTemplate extends Omit<ITemplate, 'metrics' | 'parameters'> { /
 }
 export interface UDataSet extends Omit<IDataSet, 'types' | 'rows'> {
     types: TypeStr[];
-    rows: UDataSetValue[][];
+    rows: (UDataSetValue | null)[][];
 }
 export type UDataSetValue = number | Long.Long | boolean | string;
 export type UPropertySet = Record<string, UPropertyValue>;
@@ -203,7 +203,7 @@ function isSet<T> (value: T): value is Exclude<T, null | undefined> {
     return value !== null && value !== undefined;
 }
 
-function getDataSetValue (type: number | null | undefined, object: IDataSetValue): UDataSetValue {
+function getDataSetValue (type: number | null | undefined, object: IDataSetValue): UDataSetValue | null {
     switch (type) {
         case 1: // Int8
         case 2: // Int16
@@ -232,7 +232,7 @@ function getDataSetValue (type: number | null | undefined, object: IDataSetValue
         case 15: // UUID
             if (isSet(object.stringValue)) return object.stringValue;
         default:
-            throw new Error(`Invalid DataSetValue: ${JSON.stringify(object)}`);
+            return null;
     }
 }
 
