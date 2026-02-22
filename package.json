@@ -1,6 +1,6 @@
 {
   "name": "@joyautomation/sparkplug-payload",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A library for encoding and decoding Sparkplug B payloads",
   "main": "index.js",
   "scripts": {
