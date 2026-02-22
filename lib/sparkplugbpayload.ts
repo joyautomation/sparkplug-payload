@@ -238,11 +238,25 @@ function getDataSetValue (type: number | null | undefined, object: IDataSetValue
 
 function getTemplateParamValue (type: number | null | undefined, object: IParameter): UParameter['value'] {
     switch (type) {
+        case 1: // Int8
+        case 2: // Int16
+        case 3: // Int32
+            if (isSet(object.intValue)) return new Int32Array([object.intValue])[0];
+        case 5: // UInt8
+        case 6: // UInt16
+            if (isSet(object.intValue)) return object.intValue;
         case 7: // UInt32
             if (object.longValue instanceof Long) return object.longValue.toInt();
             else if (isSet(object.longValue)) return object.longValue;
-        case 4: // UInt64
+            if (isSet(object.intValue)) return object.intValue;
+        case 4: // Int64
+            if (object.longValue instanceof Long) return object.longValue.toSigned();
+            else if (isSet(object.longValue)) return object.longValue;
+            if (isSet(object.intValue)) return object.intValue; // small Int64 encoded as intValue
+        case 8: // UInt64
+        case 13: // DateTime
             if (isSet(object.longValue)) return object.longValue;
+            if (isSet(object.intValue)) return object.intValue; // small UInt64 encoded as intValue
         case 9: // Float
             if (isSet(object.floatValue)) return object.floatValue;
         case 10: // Double
@@ -250,6 +264,8 @@ function getTemplateParamValue (type: number | null | undefined, object: IParame
         case 11: // Boolean
             if (isSet(object.booleanValue)) return object.booleanValue;
         case 12: // String
+        case 14: // Text
+        case 15: // UUID
             if (isSet(object.stringValue)) return object.stringValue;
         default:
             throw new Error(`Invalid Parameter value: ${JSON.stringify(object)}`);
